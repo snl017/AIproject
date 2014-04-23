@@ -1,43 +1,43 @@
-# RUN AC-3
-# then RUN 
 
+
+
+# RUN AC-3
 
 
 # function CSP-BACKTRACKING(assignment) returns a solution or failure 
-
-
-
-NUM_STUDENTS=415
+# THIS RUNS FAKE BACKTRACKING ON THE STUDENTS TO HAVE THEM PUT IN ROOMMATE PAIRS
 
 
 
 
+#finds the next student to assign
+#chooses the student with the smallest domain
 def heuristic(alreadyAssigned, domainsArray):
 	smallestDomain = float("inf")
 	toReturn = None
-	for i in range(NUM_STUDENTS):
+	for i in range(len(domainsArray)):
 		if not (i in alreadyAssigned):
 			if smallestDomain>len(domainsArray[i]):
 				smallestDomain=len(domainsArray[i])
 				toReturn =i
 
 	return toReturn
-
-
 	
 
 #takes as param the domain as a list
 def order(domain):
-	#CHANGE NOTHING
+	#change nothing. 
 	return domain
 
-def domainRemove(nextStudent,roommatePossibility,domainsArray):
+#remove students that have been assigned 
+#if this assignment leaves someone with nothing in their domain, return NONE
+def domainRemove(student1,student2,domainsArray):
 	#if domain remove works, return domainsArray.
-	for index in range(NUM_STUDENTS):
-		if nextStudent in domainsArray[index]:
-			domainsArray[index].remove(nextStudent)
-		if roommatePossibility in domainsArray[index]:
-			domainsArray[index].remove(roommatePossibility)
+	for index in range(len(domainsArray)):
+		if student1 in domainsArray[index]:
+			domainsArray[index].remove(student1)
+		if student2 in domainsArray[index]:
+			domainsArray[index].remove(student2)
 		if len(domainsArray[index])==0:
 			#if this domain is empty now, return None
 			return None
@@ -46,11 +46,14 @@ def domainRemove(nextStudent,roommatePossibility,domainsArray):
 	return domainsArray
 	
 
-#dictionary of assignments
-#array of lists for domains
-def backtracking(assignment,domainsArray):
+#param: assignment: dictionary of assignments
+#param: domainsArray: array of lists for domains
+#Recursive algorithm assigns roommate pairs
+#returns None if no assignment can be found (failure)
+
+def backtrackingPairs(assignment,domainsArray):
 	#  if assignment complete return assignment 
-	if (len(assignment==NUM_STUDENTS)):
+	if (len(assignment==len(domainsArray))):
 		return assignment
 
 	#  X select unassigned variable 
@@ -76,7 +79,12 @@ def backtracking(assignment,domainsArray):
 	return None
 
 
+	#DO PREPROCESSING -> PEOPLE AS FEATURE ARRAYS 
+	#RUN AC-# ON PEOPLE
+	#RUN BACKTRACKING_PAIRS (above, not really backtracking) ON PEOPLE -> ROOMMATES
 	
+	#RUN AC-# ON ROOMMATE PAIRS
+	#RUN REAL BACKTRACKING ON ROOMMATE PAIRS AS WE ASSIGN TO SPONSOR GROUPS
 
 
 
