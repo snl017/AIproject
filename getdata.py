@@ -11,10 +11,20 @@ book = xlrd.open_workbook("../../Desktop/Housing Data 2017.xls")
 housingData = book.sheet_by_index(0)
 
 print "Cell D30 is", housingData.cell_value(rowx=29, colx=3)
-numStudent = 0
 
-#this for loop gets us ordered pairs of every student and their entries in the columns
-#skips the first line because this just labels columns
-for rx in range(1, housingData.nrows):
-    print (numStudent, housingData.row(rx))
-    numStudent += 1
+
+studentValues = []
+numStudent = 0
+#this gets us an array of arrays
+#each individual array stores the information provided for each student
+#the first entry is gender, followed by 8 numbers for the ranking questions
+for rowIndex in range(1, housingData.nrows):
+	indivValues = []
+	for colIndex in range(1, 10):
+		print (rowIndex, colIndex)
+		cellVal = housingData.cell_value(rowx=rowIndex, colx=colIndex)
+		indivValues.append(cellVal)
+	studentValues.append(indivValues)
+   	numStudent += 1
+
+print studentValues
