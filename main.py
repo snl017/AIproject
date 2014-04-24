@@ -1,6 +1,6 @@
 import getdata
 import roommate
-#import spogro
+import spogro
 
 
 #MAIN FUNCTION
@@ -30,11 +30,12 @@ femalePairs = roommate.backtrackingPairs({}, domainsFemale)
 if(malePairs and femalePairs) :
 	malePairs.update(femalePairs)
 	pairs = malePairs
-	print pairs
-	print len(pairs)
+	# print pairs
+	# print len(pairs)
 	uniquePairs = roommate.uniquifyPairs(pairs)
-	print uniquePairs
-	print len(uniquePairs)
+	spogros = spogro.sortIntoSponsorGroups(uniquePairs,studentDict)
+	# print uniquePairs
+	# print len(uniquePairs)
 else :
 	if(malePairs) :
 		print "Failed to find female roommate pairings"

@@ -1,7 +1,16 @@
 import helper
 
+
+NUM_SPOGROS=30
+
+def notTogether(i,j,k,m,studentFeatures):
+	return False
+
+
+
+
 def createConstraintGraph(studentPairs, studentFeatures):
-	csg = [[0]*len(studentPairs.keys())]*len(studentPairs.keys())
+	csg = [[0]*(2*len(studentPairs.keys()))]*(2*len(studentPairs.keys()))
 	for i in studentPairs.keys():
 		for j in studentPairs.keys():
 			if (notTogether(i,studentPairs[i],j,studentPairs[j],studentFeatures)):
@@ -10,6 +19,9 @@ def createConstraintGraph(studentPairs, studentFeatures):
 	return csg
 
 def assignmentValid(assignment,csg,newlyAssignedIndex):
+	peopleInSpoGro=[x for x in assignment.values() if x==assignment[newlyAssignedIndex]]
+	if len(peopleInSpoGro)>10:
+		return False
 	for student in assignment.keys():
 		if student!=newlyAssignedIndex and assignment[student]==assignment[newlyAssignedIndex]:
 			if csg[newlyAssignedIndex][student]==1:
@@ -36,10 +48,12 @@ def backtrackingSpoGro(assignment, domains, csg):
 	#select an ordering for the domain of X 
 	orderedDomainValues = helper.order(domains[nextPair])
 	
+	
 	# #  for each value in D 
 	for spogro in orderedDomainValues:
 		#  add the pair to assignment 
 		assignment[nextPair]=spogro
+		# print spogro
 		if (assignmentValid(assignment,csg,nextPair)):
 			newDomains = inference(assignment, domains, csg) #NEED TO WRITE. NO IDEA IF THIS IS WHAT WE SHOULD PASS
 			result = backtrackingSpoGro(assignment,newDomains,csg)
@@ -50,15 +64,31 @@ def backtrackingSpoGro(assignment, domains, csg):
 	return None
 	
 
-def sortIntoSponsorGroups(studentPairs):
-	csg = createConstraintGraph(studentPairs)
+def sortIntoSponsorGroups(studentPairs,studentFeatures):
+	csg = createConstraintGraph(studentPairs,studentFeatures)
 	domains = {}
-	domainOfEach = [x in range(len(studentPairs))]
-	for i in range(len(studentPairs.keys())):
+	domainOfEach = range(NUM_SPOGROS)
+	for i in studentPairs.keys():
 		domains[i]= domainOfEach
+
 	result = backtrackingSpoGro({}, domains, csg)
-	print result
+	
+	toReturn = {}
+	for i in range(NUM_SPOGROS):
+		toReturn[i]=[]
+
+	
+	for person in result.keys():
+		spogro= toReturn[result[person]]
+		spogro.append(person)
+		spogro.append(studentPairs[person])
+		
+		toReturn[result[person]]=spogro
+
+	lengthList = [len(x) for x in toReturn.values()]
+	print lengthList
+
+	return result
 	
 
 
-}
