@@ -13,19 +13,26 @@ def getStudentValues():
 	#print "Cell D30 is", housingData.cell_value(rowx=29, colx=3)
 
 
-	studentValues = []
+	studentValues = {}
 	numStudent = 0
-	#this gets us an array of arrays
-	#each individual array stores the information provided for each student
+	#this gets us a dictionary of student id to arrays
+	#each individual key-value (id to array) stores the information provided for each student
 	#the first entry is gender, followed by 8 numbers for the ranking questions
 	for rowIndex in range(1, housingData.nrows):
 		indivValues = []
 		for colIndex in range(1, 10):
 			#print (rowIndex, colIndex)
 			cellVal = housingData.cell_value(rowx=rowIndex, colx=colIndex)
+
+			#if should be a number, convert to a number
+			if colIndex > 1 :
+				cellVal = float(cellVal)
+
 			indivValues.append(cellVal)
-		studentValues.append(indivValues)
+		studentValues[numStudent] = indivValues
 	   	numStudent += 1
 
-	#print studentValues
 	return studentValues
+
+
+#print getStudentValues()
