@@ -1,14 +1,23 @@
 import helper
 
+## Author: Sarah Jundt
+## Puts students into Sponsor Groups based on roommate pairs
 
+
+#number of sponsor groups
 NUM_SPOGROS=30
+#max number of roommate pairs per sponsor group
+MAX_PAIRS = 10 
 
+#returns whether these four students can be put in the same sponsor group
+#constraints for sponsor group!
 def notTogether(i,j,k,m,studentFeatures):
 	return False
 
 
 
-
+#creates the constraint graph as a matrix where 1 means 
+#that the students cannot be in the same spogro
 def createConstraintGraph(studentPairs, studentFeatures):
 	csg = [[0]*(2*len(studentPairs.keys()))]*(2*len(studentPairs.keys()))
 	for i in studentPairs.keys():
@@ -18,9 +27,12 @@ def createConstraintGraph(studentPairs, studentFeatures):
 				csg[j][i]=1
 	return csg
 
+#determines and returns whether the assignment is valid based on the constraint graph
+#only checks to make sure the new assignment is consistent with all other assignments: 
+#must call after each assignment
 def assignmentValid(assignment,csg,newlyAssignedIndex):
 	peopleInSpoGro=[x for x in assignment.values() if x==assignment[newlyAssignedIndex]]
-	if len(peopleInSpoGro)>10:
+	if len(peopleInSpoGro)>MAX_PAIRS:
 		return False
 	for student in assignment.keys():
 		if student!=newlyAssignedIndex and assignment[student]==assignment[newlyAssignedIndex]:
@@ -29,6 +41,9 @@ def assignmentValid(assignment,csg,newlyAssignedIndex):
 	return True
 
 
+#uses some inference (forward-checking someday?)
+#reduces the domains of some roommates according to csg & current assignment
+#to speed backtracking
 def inference(assignments,domains,csg):
 	return domains #return the new set of domains
 
@@ -36,6 +51,7 @@ def inference(assignments,domains,csg):
 #assignment is a dictionary
 #domains is a dictionary
 #csg is a matrix (list of lists) of whether the pairs can be matched.
+#puts roommate pairs in sponsor groups
 def backtrackingSpoGro(assignment, domains, csg):
 	if len(assignment)==len(domains.keys()):
 		return assignment
@@ -63,20 +79,24 @@ def backtrackingSpoGro(assignment, domains, csg):
 
 	return None
 	
-
+#sorts students into sponsor groups
+#note: studentPairs is a dictionary from half the students to their roommates
 def sortIntoSponsorGroups(studentPairs,studentFeatures):
+	#creates a csg
 	csg = createConstraintGraph(studentPairs,studentFeatures)
 	domains = {}
+	#gives every roommate pair the opportunity to be with every other roommate pair
 	domainOfEach = range(NUM_SPOGROS)
 	for i in studentPairs.keys():
 		domains[i]= domainOfEach
 
+	#backtracks
 	result = backtrackingSpoGro({}, domains, csg)
 	
+	#puts students into lists based on their sponsor group
 	toReturn = {}
 	for i in range(NUM_SPOGROS):
 		toReturn[i]=[]
-
 	
 	for person in result.keys():
 		spogro= toReturn[result[person]]
@@ -85,10 +105,8 @@ def sortIntoSponsorGroups(studentPairs,studentFeatures):
 		
 		toReturn[result[person]]=spogro
 
-	lengthList = [len(x) for x in toReturn.values()]
-	print lengthList
-
-	return result
+	#returns a dictionary of sponsor group number to the students in that sponsor group
+	return toReturn
 	
 
 
