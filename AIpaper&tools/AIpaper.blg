@@ -1,0 +1,10 @@
+This is BibTeX, Version 0.99dThe top-level auxiliary file: AIpaper.aux
+I couldn't open database file Bibliography-File.bib
+---line 2 of file AIpaper.aux
+ : \bibdata{Bibliography-File
+ :                           }
+I'm skipping whatever remains of this command
+The style file: aaai.bst
+I found no \citation commands---while reading file AIpaper.aux
+I found no database files---while reading file AIpaper.aux
+(There were 3 error messages)
