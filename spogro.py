@@ -1,3 +1,9 @@
+
+# coding: utf-8
+#for some reason this was needed because I was getting a weird character thing? 
+# apparently, it's something in the giant comment block detailing the question information, 
+#but includeing this coding eliminates the error
+
 ##Sarah Jundt and Shannon Lubetich
 ##AI project
 #Spring 2014
@@ -7,14 +13,40 @@
 import helper
 
 
+
+
 #number of sponsor groups
 NUM_SPOGROS=30
 #max number of roommate pairs per sponsor group
 MAX_PAIRS = 10 
 
+
+"""
+a. Is serious about studying and will make studying a priority of our room.*
+b. Allows me to have visitors over as often as I’d like and doesn’t mind having people over in our room.**
+c. Will be my friend who confides in me and likes to do a lot of things together.*
+d. Doesn’t let school take over our entire lives, and knows how to have a good time.*
+e. Shares responsibility for keeping our room neat.***
+f. Respects my need for privacy and will allow me some time to myself.**
+g. Respects my property and doesn’t borrow my things without asking.***
+h. Has similar sleep habits (i.e. windows opened/closed, absolute quiet, no light, etc.)***
+
+j. There are people who share backgrounds and cultures similar to my own.
+k. People are aware of, sensitive to, and willing to discuss multicultural issues.
+
+
+*
+**
+***
+
+"""
+
 #returns whether these four students can be put in the same sponsor group
 #constraints for sponsor group!
 def notTogether(i,j,k,m,studentFeatures):
+	#no less than 40% male, no more than 60% male
+	#prioiritize j & k because they haven't been looked at yet
+	#see stars above for other priorities
 	return False
 
 

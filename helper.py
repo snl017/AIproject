@@ -28,3 +28,12 @@ def order(domain):
 	#randomly shuffle the possible domains of students and return
 	random.shuffle(domain)
 	return domain
+
+
+#write different order method to order sponsor groups with FEWER members to be selected first
+def orderSmallestSpogro(domain):
+	#this is going to be difficult because we actually have no idea what the sizes are till the very end. 
+	#when we translate the mapping of person to sponsor group
+	#to resulting spogro# to the members of that sponsor group
+	#so maybe we should have something that tracks the current size? 
+	return domain
