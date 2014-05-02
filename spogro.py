@@ -1,7 +1,10 @@
-import helper
-
+##Sarah Jundt and Shannon Lubetich
+##AI project
+#Spring 2014
 ## Author: Sarah Jundt
 ## Puts students into Sponsor Groups based on roommate pairs
+
+import helper
 
 
 #number of sponsor groups
