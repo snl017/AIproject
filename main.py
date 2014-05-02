@@ -39,7 +39,7 @@ if(malePairs and femalePairs) :
 	# print len(pairs)
 	uniquePairs = roommate.uniquifyPairs(pairs)
 	#print uniquePairs
-	for i in range(10) :
+	for i in range(1) :
 		spogros = spogro.sortIntoSponsorGroups(uniquePairs,studentDict)
 		print str(i)+":"
 		print spogros

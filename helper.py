@@ -31,9 +31,22 @@ def order(domain):
 
 
 #write different order method to order sponsor groups with FEWER members to be selected first
-def orderSmallestSpogro(domain):
+def orderSmallestSpogro(domain, sponsorGroups):
 	#this is going to be difficult because we actually have no idea what the sizes are till the very end. 
 	#when we translate the mapping of person to sponsor group
 	#to resulting spogro# to the members of that sponsor group
 	#so maybe we should have something that tracks the current size? 
-	return domain
+
+
+	#so i think this works but we should talk about it
+	
+	spoGroNumList = sponsorGroups.keys()
+
+	sizeSpogros = [len(x) for x in sponsorGroups.values()]
+
+	smallToLarge = [x for (y,x) in sorted(zip(sizeSpogros, spoGroNumList))]
+	print smallToLarge
+
+
+
+	return smallToLarge

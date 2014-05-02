@@ -87,7 +87,7 @@ def inference(assignments,domains,csg):
 #domains is a dictionary
 #csg is a matrix (list of lists) of whether the pairs can be matched.
 #puts roommate pairs in sponsor groups
-def backtrackingSpoGro(assignment, domains, csg):
+def backtrackingSpoGro(assignment, domains, csg, sponsorGroups):
 	if len(assignment)==len(domains.keys()):
 		return assignment
 
@@ -97,7 +97,7 @@ def backtrackingSpoGro(assignment, domains, csg):
 
 
 	#select an ordering for the domain of X 
-	orderedDomainValues = helper.order(domains[nextPair])
+	orderedDomainValues = helper.orderSmallestSpogro(domains[nextPair], sponsorGroups)
 	
 	
 	# #  for each value in D 
@@ -106,8 +106,14 @@ def backtrackingSpoGro(assignment, domains, csg):
 		assignment[nextPair]=spogro
 		# print spogro
 		if (assignmentValid(assignment,csg,nextPair)):
+			#assign sponsorgroup to have ONE of the people in roommate pair as member
+			sponsorGroupList= sponsorGroups[spogro]
+			sponsorGroupList.append(nextPair)
+			sponsorGroups[spogro]=sponsorGroupList
+			#print sponsorGroups
+
 			newDomains = inference(assignment, domains, csg) #NEED TO WRITE. NO IDEA IF THIS IS WHAT WE SHOULD PASS
-			result = backtrackingSpoGro(assignment,newDomains,csg)
+			result = backtrackingSpoGro(assignment,newDomains,csg, sponsorGroups)
 			if result: #if this recursive assignment works!
 				return result
 		del assignment[nextPair]
@@ -125,8 +131,13 @@ def sortIntoSponsorGroups(studentPairs,studentFeatures):
 	for i in studentPairs.keys():
 		domains[i]= domainOfEach
 
+
+	sponsorGroups = {}
+	for i in range(NUM_SPOGROS):
+		sponsorGroups[i]=[]
+
 	#backtracks
-	result = backtrackingSpoGro({}, domains, csg)
+	result = backtrackingSpoGro({}, domains, csg, sponsorGroups)
 	
 	#puts students into lists based on their sponsor group
 	toReturn = {}
