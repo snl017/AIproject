@@ -5,8 +5,43 @@
 import random
 
 
+#number of sponsor groups
+NUM_SPOGROS=30
 #helper methods
 
+
+#put the students into a dictionary where a student maps to its sponsor group
+def studentMaps(assignment):
+	i = 0
+	toReturn = {}
+	for spogro in assignment.values():
+		for student in spogro:
+			toReturn[student]=i
+		i+=1
+	return toReturn
+
+
+#get the purity of a clustering given the assignment
+def purity(clusters, assignment):
+	studentAssignments = studentMaps(assignment)
+	correct = 0
+	total = 0
+	#for each cluster
+	for cluster in clusters:
+		numsOfEachLabel = [0]*NUM_SPOGROS
+		for student in cluster:
+			#find its label
+			label = studentAssignments[student]
+			numsOfEachLabel[label]+=1
+		#find the best label for this cluster
+		bestLabel = numsOfEachLabel.index(max(numsOfEachLabel))
+		#find the number of students in this cluster for which the label is correct
+		for student in cluster:
+			total +=1
+			if bestLabel==studentAssignments[student]:
+				correct+=1
+	#return the purity of the clustering as a whole
+	return float(correct)/float(total)
 
 
 #finds the next student to assign

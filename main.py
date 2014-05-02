@@ -6,6 +6,8 @@
 import getdata
 import roommate
 import spogro
+import helper
+#import cluster
 from copy import deepcopy
 
 
@@ -42,16 +44,35 @@ if(malePairs and femalePairs) :
 	#print uniquePairs
 	for i in range(1) :
 		spogros = spogro.sortIntoSponsorGroups(uniquePairs,studentDict)
+
+		#get the clustering of the students
+		#TODO: THIS MUST BE CHANGED BACK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		clustering = []
+		for spogro in spogros.values():
+			clustering.append(spogro)		
+		#clustering = cluster.kcluster(uniquePairs,studentDict,NUM_SPOGROS)
+		
+		#get the purity
+		purity = helper.purity(clustering,spogros)
+
+
+		#PRINT OUTPUTS
+		print "Pairing "+str(i)+":"
+		print "The sponsor groups were created with "+str(purity)+" purity!"
 		#puts students' roommate pairs into their sponsor groups
 		spogrosWithAllStudents = deepcopy(spogros)
 		for spogro in spogrosWithAllStudents.values():
 	 		for student in uniquePairs.keys():
 	 			if student in spogro:
 	 				spogro.append(uniquePairs[student])
-		print str(i)+":"
+	 	print "Here are the sponsor groups: "
 		print spogrosWithAllStudents
-		for spogro in spogrosWithAllStudents.values():
-			print len(spogro)
+		lengths = [len(spogro) for spogro in spogrosWithAllStudents.values()]
+		print "Maximum size spogro: "+str(max(lengths))
+		print "Minimum size spogro: "+str(min(lengths))
+
+
+
 else :
 	if(malePairs) :
 		print "Failed to find female roommate pairings"
