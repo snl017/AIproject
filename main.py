@@ -43,6 +43,8 @@ if(malePairs and femalePairs) :
 		spogros = spogro.sortIntoSponsorGroups(uniquePairs,studentDict)
 		print str(i)+":"
 		print spogros
+		for spogro in spogros.values():
+			print len(spogro)
 else :
 	if(malePairs) :
 		print "Failed to find female roommate pairings"
