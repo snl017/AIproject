@@ -1,3 +1,8 @@
+#Sarah Jundt and Shannon Lubetich
+#AI project
+#Spring 2014
+
+
 import getdata
 import roommate
 import spogro

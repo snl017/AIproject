@@ -1,3 +1,11 @@
+#Sarah Jundt and Shannon Lubetich
+#AI project
+#Spring 2014
+
+# pairs roommates based on 8 features rating importance of certain roommate qualities
+# 0 = not important to 9 = very important
+
+
 import getdata
 import helper
 

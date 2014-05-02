@@ -1,4 +1,7 @@
 #read in excel file of data and format
+#written by Shannon Lubetich
+# AI project of Sarah Jundt & Shannon Lubetich
+# Spring 2014
 
 import xlrd
 import os
