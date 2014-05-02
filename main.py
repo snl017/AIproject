@@ -6,6 +6,7 @@
 import getdata
 import roommate
 import spogro
+from copy import deepcopy
 
 
 #MAIN FUNCTION
@@ -41,9 +42,15 @@ if(malePairs and femalePairs) :
 	#print uniquePairs
 	for i in range(1) :
 		spogros = spogro.sortIntoSponsorGroups(uniquePairs,studentDict)
+		#puts students' roommate pairs into their sponsor groups
+		spogrosWithAllStudents = deepcopy(spogros)
+		for spogro in spogrosWithAllStudents.values():
+	 		for student in uniquePairs.keys():
+	 			if student in spogro:
+	 				spogro.append(uniquePairs[student])
 		print str(i)+":"
-		print spogros
-		for spogro in spogros.values():
+		print spogrosWithAllStudents
+		for spogro in spogrosWithAllStudents.values():
 			print len(spogro)
 else :
 	if(malePairs) :

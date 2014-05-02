@@ -11,7 +11,7 @@
 ## Puts students into Sponsor Groups based on roommate pairs
 
 import helper
-from copy import deepcopy
+
 
 
 
@@ -152,13 +152,7 @@ def sortIntoSponsorGroups(studentPairs,studentFeatures):
 
 	#backtracks
 	result = backtrackingSpoGro(assignment, domains, csg, studentFeatures, [])
-	
-	#puts students' roommate pairs into their sponsor groups
-	toReturn = deepcopy(result)
-	for spogro in toReturn.values():
-	 	for student in studentPairs.keys():
-	 		if student in spogro:
-	 			spogro.append(studentPairs[student])
-	return toReturn
+
+	return result
 
 
