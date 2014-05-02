@@ -39,14 +39,27 @@ def orderSmallestSpogro(domain, sponsorGroups):
 
 
 	#so i think this works but we should talk about it
-	
+
 	spoGroNumList = sponsorGroups.keys()
 
 	sizeSpogros = [len(x) for x in sponsorGroups.values()]
 
 	smallToLarge = [x for (y,x) in sorted(zip(sizeSpogros, spoGroNumList))]
-	print smallToLarge
-
-
-
+	#print smallToLarge
 	return smallToLarge
+
+
+
+#returns a dictionary of 1st student in roommate pair mapped to 
+#a feature vector that is an average of their preferences
+def averagePref(studentPairs, studentFeatures) :
+	avgPref = {}
+	for studentX in studentPairs.keys():
+		studentY = studentPairs[studentX]
+		xFea = studentFeatures[x]
+		yFea = studentFeatures[y]
+		avg = []
+		for i in len(xFea) :
+			avg[i] = float((xFea[i]+yFea[i]))/2
+		avgPref[studentX] = avg
+	return avgPref
