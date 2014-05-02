@@ -11,6 +11,7 @@
 ## Puts students into Sponsor Groups based on roommate pairs
 
 import helper
+from copy import deepcopy
 
 
 
@@ -44,7 +45,7 @@ k. People are aware of, sensitive to, and willing to discuss multicultural issue
 #returns whether these four students can be put in the same sponsor group
 #constraints for sponsor group!
 def notTogether(i,j,k,m,studentFeatures):
-	#no less than 40% male, no more than 60% male
+	
 	#prioiritize j & k because they haven't been looked at yet
 	#see stars above for other priorities
 	return False
@@ -65,14 +66,31 @@ def createConstraintGraph(studentPairs, studentFeatures):
 #determines and returns whether the assignment is valid based on the constraint graph
 #only checks to make sure the new assignment is consistent with all other assignments: 
 #must call after each assignment
-def assignmentValid(assignment,csg,newlyAssignedIndex):
-	peopleInSpoGro=[x for x in assignment.values() if x==assignment[newlyAssignedIndex]]
+def assignmentValid(assignment,csg, newlyAssignedIndex, spogro, studentFeatures):
+	peopleInSpoGro=assignment[spogro]
+	#if spogro is too large:
 	if len(peopleInSpoGro)>MAX_PAIRS:
 		return False
-	for student in assignment.keys():
-		if student!=newlyAssignedIndex and assignment[student]==assignment[newlyAssignedIndex]:
+	if len(peopleInSpoGro)==1:
+		return True
+	#counter for male students in spogro
+	male = 0
+	#count the number of males
+	for student in peopleInSpoGro:
+		if student!=newlyAssignedIndex:
+			if studentFeatures[student][0]=="M":
+				male+=1
+			#if the newly assigned student clashes with anyone in their spogro, NO
 			if csg[newlyAssignedIndex][student]==1:
 				return False
+	#percent of male students in spogro
+	percentMale = float(male) /float(len(peopleInSpoGro)-1)
+	#if we've assigned more than 2, keep genders balanced.
+
+	if (len(peopleInSpoGro)>2):
+		if ((percentMale>0.5 and studentFeatures[newlyAssignedIndex][0]=="M") or (percentMale<0.5 and studentFeatures[newlyAssignedIndex][0]=="F")):
+			return False
+
 	return True
 
 
@@ -87,36 +105,33 @@ def inference(assignments,domains,csg):
 #domains is a dictionary
 #csg is a matrix (list of lists) of whether the pairs can be matched.
 #puts roommate pairs in sponsor groups
-def backtrackingSpoGro(assignment, domains, csg, sponsorGroups):
-	if len(assignment)==len(domains.keys()):
+def backtrackingSpoGro(assignment, domains, csg, studentFeatures, assignedStudents):
+
+	if len(assignedStudents)==len(domains.keys()):
 		return assignment
 
 	#  X select unassigned variable 
 	# USE HEURISTIC
-	nextPair = helper.heuristic(assignment.keys(),domains)
-
+	nextPair = helper.heuristic(assignedStudents,domains)
+	assignedStudents.append(nextPair)
 
 	#select an ordering for the domain of X 
-	orderedDomainValues = helper.orderSmallestSpogro(domains[nextPair], sponsorGroups)
+	orderedDomainValues = helper.orderSmallestSpogro(domains[nextPair],assignment)
 	
 	
 	# #  for each value in D 
 	for spogro in orderedDomainValues:
 		#  add the pair to assignment 
-		assignment[nextPair]=spogro
-		# print spogro
-		if (assignmentValid(assignment,csg,nextPair)):
-			#assign sponsorgroup to have ONE of the people in roommate pair as member
-			sponsorGroupList= sponsorGroups[spogro]
-			sponsorGroupList.append(nextPair)
-			sponsorGroups[spogro]=sponsorGroupList
-			#print sponsorGroups
-
+		assignment[spogro].append(nextPair)
+		
+		#id the assignment is valid, recurse.
+		if (assignmentValid(assignment,csg, nextPair, spogro,studentFeatures)):
+			
 			newDomains = inference(assignment, domains, csg) #NEED TO WRITE. NO IDEA IF THIS IS WHAT WE SHOULD PASS
-			result = backtrackingSpoGro(assignment,newDomains,csg, sponsorGroups)
+			result = backtrackingSpoGro(assignment,newDomains,csg, studentFeatures, assignedStudents)
 			if result: #if this recursive assignment works!
 				return result
-		del assignment[nextPair]
+		assignment[spogro].remove(nextPair)
 
 	return None
 	
@@ -131,28 +146,19 @@ def sortIntoSponsorGroups(studentPairs,studentFeatures):
 	for i in studentPairs.keys():
 		domains[i]= domainOfEach
 
-
-	sponsorGroups = {}
-	for i in range(NUM_SPOGROS):
-		sponsorGroups[i]=[]
+	assignment = {}
+	for i in range(30):
+		assignment[i]=[]
 
 	#backtracks
-	result = backtrackingSpoGro({}, domains, csg, sponsorGroups)
+	result = backtrackingSpoGro(assignment, domains, csg, studentFeatures, [])
 	
-	#puts students into lists based on their sponsor group
-	toReturn = {}
-	for i in range(NUM_SPOGROS):
-		toReturn[i]=[]
-	
-	for person in result.keys():
-		spogro= toReturn[result[person]]
-		spogro.append(person)
-		spogro.append(studentPairs[person])
-		
-		toReturn[result[person]]=spogro
-
-	#returns a dictionary of sponsor group number to the students in that sponsor group
+	#puts students' roommate pairs into their sponsor groups
+	toReturn = deepcopy(result)
+	for spogro in toReturn.values():
+	 	for student in studentPairs.keys():
+	 		if student in spogro:
+	 			spogro.append(studentPairs[student])
 	return toReturn
-	
 
 
