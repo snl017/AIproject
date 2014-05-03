@@ -87,14 +87,42 @@ def orderSmallestSpogro(domain, sponsorGroups):
 
 #returns a dictionary of 1st student in roommate pair mapped to 
 #a feature vector that is an average of their preferences
+#returns average preferences of the roommate pair WITHOUT information about their sex/gender
 def averagePref(studentPairs, studentFeatures) :
 	avgPref = {}
 	for studentX in studentPairs.keys():
 		studentY = studentPairs[studentX]
-		xFea = studentFeatures[x]
-		yFea = studentFeatures[y]
+		xFea = studentFeatures[studentX]
+		yFea = studentFeatures[studentY]
 		avg = []
-		for i in len(xFea) :
-			avg[i] = float((xFea[i]+yFea[i]))/2
+		#REMOVE THE GENDER/SEX.
+		#KEEP ONLY NUMERIC VALUES
+		for i in range(len(xFea)) :
+			if i>1:
+				avg.append(float((xFea[i]+yFea[i]))/2)
+		#set the average preferences of the student in studentFeatures
 		avgPref[studentX] = avg
+
 	return avgPref
+
+	##OLD CODE
+	# avgPref = {}
+	# for studentX in studentPairs.keys():
+	# 	studentY = studentPairs[studentX]
+	# 	xFea = studentFeatures[studentX]
+	# 	yFea = studentFeatures[studentY]
+	# 	avg = [-1]*len(xFea)
+	# 	#keep the gender/sex: no need to average
+	# 	# avg[0]=xFea[0]
+	# 	# avg[1]=xFea[1]
+	# 	#for all the other features, average them
+	# 	for i in range(len(xFea)) :
+	# 		if i>1:
+	# 			avg[i] = float((xFea[i]+yFea[i]))/2
+	# 	#check for errors in assignment
+	# 	if -1 in avg:
+	# 		print "ERROR: averagePref did not assign a value" 
+	# 	#set the average preferences of the student in studentFeatures
+	# 	avgPref[studentX] = avg
+
+	# return avgPref

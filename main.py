@@ -7,7 +7,7 @@ import getdata
 import roommate
 import spogro
 import helper
-#import cluster
+import cluster
 from copy import deepcopy
 
 
@@ -45,12 +45,8 @@ if(malePairs and femalePairs) :
 	for i in range(1) :
 		spogros = spogro.sortIntoSponsorGroups(uniquePairs,studentDict)
 
-		#get the clustering of the students
-		#TODO: THIS MUST BE CHANGED BACK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		clustering = []
-		for spogro in spogros.values():
-			clustering.append(spogro)		
-		#clustering = cluster.kcluster(uniquePairs,studentDict,NUM_SPOGROS)
+		#get the clustering of the students	
+		clustering = cluster.kcluster(uniquePairs,studentDict,helper.NUM_SPOGROS)
 		
 		#get the purity
 		purity = helper.purity(clustering,spogros)
