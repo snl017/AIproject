@@ -41,33 +41,38 @@ if(malePairs and femalePairs) :
 	# print pairs
 	# print len(pairs)
 	uniquePairs = roommate.uniquifyPairs(pairs)
+
+	#get the clustering of the students	
+	clustering = cluster.kcluster(uniquePairs,studentDict,helper.NUM_SPOGROS)
 	#print uniquePairs
 	for i in range(1) :
 		spogros = spogro.sortIntoSponsorGroups(uniquePairs,studentDict)
 
-		#get the clustering of the students	
-		clustering = cluster.kcluster(uniquePairs,studentDict,helper.NUM_SPOGROS)
-		
-		#get the purity
-		purity = helper.purity(clustering,spogros)
+		#if sponsor groups could not be assigned
+		if not spogros:
+			print "Students were not sorted into sponsor groups!"
+		else: 
+
+			
+			
+			#get the purity
+			purity = helper.purity(clustering,spogros)
 
 
-		#PRINT OUTPUTS
-		print "Pairing "+str(i)+":"
-		print "The sponsor groups were created with "+str(purity)+" purity!"
-		#puts students' roommate pairs into their sponsor groups
-		spogrosWithAllStudents = deepcopy(spogros)
-		for spogro in spogrosWithAllStudents.values():
-	 		for student in uniquePairs.keys():
-	 			if student in spogro:
-	 				spogro.append(uniquePairs[student])
-	 	print "Here are the sponsor groups (made by our algorithm): "
-		print spogrosWithAllStudents
-		lengths = [len(spogro) for spogro in spogrosWithAllStudents.values()]
-		print "Maximum size spogro: "+str(max(lengths))
-		print "Minimum size spogro: "+str(min(lengths))
-
-
+			#PRINT OUTPUTS
+			print "Pairing "+str(i)+":"
+			print "The sponsor groups were created with "+str(purity)+" purity!"
+			#puts students' roommate pairs into their sponsor groups
+			spogrosWithAllStudents = deepcopy(spogros)
+			for spogro in spogrosWithAllStudents.values():
+		 		for student in uniquePairs.keys():
+		 			if student in spogro:
+		 				spogro.append(uniquePairs[student])
+		 	print "Here are the sponsor groups (made by our algorithm): "
+			print spogrosWithAllStudents
+			lengths = [len(spogro) for spogro in spogrosWithAllStudents.values()]
+			print "Maximum size spogro: "+str(max(lengths))
+			print "Minimum size spogro: "+str(min(lengths))
 
 else :
 	if(malePairs) :
