@@ -24,10 +24,13 @@ def closestCentroid(studentX, avgPairFeatures, centroids) :
 	#for each centroid
 	for i in range(len(centroids)) :
 		c = centroids[i]
+		#if not(0 in c):
+			#print "c is" + str(c)
 		diff = []
 		#get the distance to the centroid for each feature
-		for j in range(len(avgPairFeatures[c])):
-			diff.append(abs(avgPairFeatures[c][j]-avgPairFeatures[studentX][j]))
+		#the c is represented as a list of preferences
+		for j in range(len(c)):
+			diff.append(abs(c[j]-avgPairFeatures[studentX][j]))
 		#get the distance to the centroid, taking into account all features
 		distances[i]=numpy.linalg.norm(diff)
 	#return the index of the closest centroid
@@ -41,18 +44,18 @@ def computeCentroids(clusters,K,avgPairFeatures):
 		#i am going to have to average all the things in the cluster,
 		#but for now i'm just setting the centroid to be the first one
 
-		# #average all things in the cluster
-		# sums = numpy.array([0]*num_features) #length of number of elements
-		# averages = [0]*num_features
+		#average all things in the cluster
+		sums = numpy.array([0]*num_features) #length of number of elements
+		averages = [0]*num_features
 
-		# #for each student, add their values.
-		# for studentX in clusters[i]:
-		# 	xFeatures = avgPairFeatures[studentX]
-		# 	sums = sums + numpy.array(xFeatures)
-		# for j in range(num_features):
-		# 	averages[j] = sums[j]
+		#for each student, add their values.
+		for studentX in clusters[i]:
+			xFeatures = avgPairFeatures[studentX]
+			sums = sums + numpy.array(xFeatures)
+		for j in range(num_features):
+			averages[j] = float(sums[j])/len(clusters[i])
 
-		# centroids[i] = averages
+		centroids[i] = averages
 
 
 
@@ -71,7 +74,7 @@ def computeCentroids(clusters,K,avgPairFeatures):
 
 
 
-		centroids[i] = clusters[i][0]
+		#centroids[i] = clusters[i][0]
 	#check to make sure all went well
 	if -1 in centroids:
 		print "computeCentroids failed to compute a centroid!"
@@ -89,7 +92,7 @@ def kcluster(studentPairs, studentFeatures, K) :
 
 	seeds = selectSeeds(studentPairs.keys(), K)
 	for i in range(K) :
-		centroids[i] = seeds[i]
+		centroids[i] = avgPairFeatures[seeds[i]]
 	#check to make sure all went well
 	if -1 in centroids:
 		print "kclustering did not appropriately add seeds as centroids"
@@ -110,7 +113,12 @@ def kcluster(studentPairs, studentFeatures, K) :
 			centroids = computeCentroids(clusters,K,avgPairFeatures)
 		i += 1
 
-	#return centroids? really? 
+	print "these are the centroids of our clusters: "
+	print centroids
+
+	for clust in clusters :
+		print 2*len(clust)
+
 	return clusters
 
 
