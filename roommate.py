@@ -8,6 +8,7 @@
 
 import getdata
 import helper
+import time
 
 #FAKE AC-3
 
@@ -120,9 +121,17 @@ def backtrackingPairs(assignment,domains):
 def uniquifyPairs(dictionary) :
 	studentKeys = dictionary.keys()
 	for key in studentKeys :
+		#these booleans make sure the code orders properly (no optimization changes order) 
+		readyToDelete = False
+		doneDeleting = False
 		otherStudentToDelete = dictionary[key]
-		del dictionary[otherStudentToDelete]
-		studentKeys.remove(otherStudentToDelete)
+		if(otherStudentToDelete in studentKeys) :
+			readyToDelete = True
+		if(readyToDelete) :
+			del dictionary[otherStudentToDelete]
+			doneDeleting = True
+		if (doneDeleting) :
+			studentKeys.remove(otherStudentToDelete)
 	return dictionary
 
 

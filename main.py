@@ -61,7 +61,7 @@ if(malePairs and femalePairs) :
 	 		for student in uniquePairs.keys():
 	 			if student in spogro:
 	 				spogro.append(uniquePairs[student])
-	 	print "Here are the sponsor groups: "
+	 	print "Here are the sponsor groups (made by our algorithm): "
 		print spogrosWithAllStudents
 		lengths = [len(spogro) for spogro in spogrosWithAllStudents.values()]
 		print "Maximum size spogro: "+str(max(lengths))
