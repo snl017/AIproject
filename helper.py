@@ -98,7 +98,7 @@ def averagePref(studentPairs, studentFeatures) :
 		#REMOVE THE GENDER/SEX.
 		#KEEP ONLY NUMERIC VALUES
 		for i in range(len(xFea)) :
-			if i>1:
+			if i>0:
 				avg.append(float((xFea[i]+yFea[i]))/2)
 		#set the average preferences of the student in studentFeatures
 		avgPref[studentX] = avg

@@ -49,7 +49,7 @@ if(malePairs and femalePairs) :
 		spogros = spogro.sortIntoSponsorGroups(uniquePairs,studentDict)
 
 		#if sponsor groups could not be assigned
-		if not spogros:
+		if spogros == None:
 			print "Students were not sorted into sponsor groups!"
 		else: 
 

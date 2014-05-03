@@ -36,18 +36,49 @@ j. There are people who share backgrounds and cultures similar to my own.
 k. People are aware of, sensitive to, and willing to discuss multicultural issues.
 
 
-*
-**
-***
+* = highPriority
+** = midPriority
+*** = lowPriority
 
 """
 
-#returns whether these four students can be put in the same sponsor group
+#returns true if pairs i and j CANNOT be in the same group
+#returns false if pairs i and j CAN be in the same group
 #constraints for sponsor group!
-def notTogether(i,j,k,m,studentFeatures):
-	
+def notTogether(i,j,avgPref):
+	#avgPref[i] is a list of 10 elts, indexed 0-9
+
+	highPriority = [0, 2, 3]
+	midPriority = [1, 5]
+	lowPriority = [4, 6, 7]
+
 	#prioiritize j & k because they haven't been looked at yet
-	#see stars above for other priorities
+	#difference must be within 3 points
+	#
+	#j
+	if abs(avgPref[i][8] - avgPref[j][8]) > 3 :
+		return True
+	#
+	#k
+	if abs(avgPref[i][9] - avgPref[j][9]) > 3 :
+		return True
+
+	#high priority 
+	for q in highPriority :
+		if abs(avgPref[i][q] - avgPref[j][q]) > 3 :
+			return True
+
+	#mid priority
+	for q in midPriority :
+		if abs(avgPref[i][q] - avgPref[j][q]) > 5 :
+			return True
+
+	#low priority
+	for q in highPriority :
+		if abs(avgPref[i][q] - avgPref[j][q]) > 7 :
+			return True
+
+	#if none of these things happen, then people are similar and we're good! we can put these pairs together! 
 	return False
 
 
@@ -55,10 +86,13 @@ def notTogether(i,j,k,m,studentFeatures):
 #creates the constraint graph as a matrix where 1 means 
 #that the students cannot be in the same spogro
 def createConstraintGraph(studentPairs, studentFeatures):
+	avgPref = helper.averagePref(studentPairs, studentFeatures)
+
+
 	csg = [[0]*(2*len(studentPairs.keys()))]*(2*len(studentPairs.keys()))
 	for i in studentPairs.keys():
 		for j in studentPairs.keys():
-			if (notTogether(i,studentPairs[i],j,studentPairs[j],studentFeatures)):
+			if (notTogether(i,j,avgPref)):
 				csg[i][j]=1
 				csg[j][i]=1
 	return csg
@@ -132,7 +166,6 @@ def backtrackingSpoGro(assignment, domains, csg, studentFeatures, assignedStuden
 			if result: #if this recursive assignment works!
 				return result
 		assignment[spogro].remove(nextPair)
-
 	return None
 	
 #sorts students into sponsor groups

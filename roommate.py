@@ -8,7 +8,6 @@
 
 import getdata
 import helper
-import time
 
 #FAKE AC-3
 
