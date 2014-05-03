@@ -113,11 +113,11 @@ def kcluster(studentPairs, studentFeatures, K) :
 			centroids = computeCentroids(clusters,K,avgPairFeatures)
 		i += 1
 
-	print "these are the centroids of our clusters: "
-	print centroids
+	# print "these are the centroids of our clusters: "
+	# print centroids
 
-	for clust in clusters :
-		print 2*len(clust)
+	# for clust in clusters :
+	# 	print 2*len(clust)
 
 	return clusters
 

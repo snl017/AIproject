@@ -14,10 +14,13 @@ NUM_SPOGROS=30
 def studentMaps(assignment):
 	i = 0
 	toReturn = {}
+	numStudents = 0
 	for spogro in assignment.values():
 		for student in spogro:
 			toReturn[student]=i
+			numStudents += 1
 		i+=1
+	print "STUDENTS NUM: " + str(numStudents)
 	return toReturn
 
 

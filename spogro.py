@@ -52,30 +52,37 @@ def notTogether(i,j,avgPref):
 	midPriority = [1, 5]
 	lowPriority = [4, 6, 7]
 
+
+	"""
+	FUN STUFF
+	there are only 29 pairs assigned when we use these constraints, 
+	and yet it doesn't return None
+	"""
+
 	#prioiritize j & k because they haven't been looked at yet
 	#difference must be within 3 points
 	#
 	#j
-	if abs(avgPref[i][8] - avgPref[j][8]) > 3 :
+	if abs(avgPref[i][8] - avgPref[j][8]) > 8 :
 		return True
 	#
 	#k
-	if abs(avgPref[i][9] - avgPref[j][9]) > 3 :
+	if abs(avgPref[i][9] - avgPref[j][9]) > 8 :
 		return True
 
 	#high priority 
 	for q in highPriority :
-		if abs(avgPref[i][q] - avgPref[j][q]) > 3 :
+		if abs(avgPref[i][q] - avgPref[j][q]) > 91 :
 			return True
 
 	#mid priority
 	for q in midPriority :
-		if abs(avgPref[i][q] - avgPref[j][q]) > 5 :
+		if abs(avgPref[i][q] - avgPref[j][q]) > 91 :
 			return True
 
 	#low priority
-	for q in highPriority :
-		if abs(avgPref[i][q] - avgPref[j][q]) > 7 :
+	for q in lowPriority :
+		if abs(avgPref[i][q] - avgPref[j][q]) > 91 :
 			return True
 
 	#if none of these things happen, then people are similar and we're good! we can put these pairs together! 
@@ -166,6 +173,7 @@ def backtrackingSpoGro(assignment, domains, csg, studentFeatures, assignedStuden
 			if result: #if this recursive assignment works!
 				return result
 		assignment[spogro].remove(nextPair)
+
 	return None
 	
 #sorts students into sponsor groups
