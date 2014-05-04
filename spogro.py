@@ -72,7 +72,7 @@ def notTogether(i,j,avgPref):
 
 	#high priority 
 	for q in highPriority :
-		if abs(avgPref[i][q] - avgPref[j][q]) > 91 :
+		if abs(avgPref[i][q] - avgPref[j][q]) > 8 :
 			return True
 
 	#mid priority
@@ -138,7 +138,11 @@ def assignmentValid(assignment,csg, newlyAssignedIndex, spogro, studentFeatures)
 #uses some inference (forward-checking someday?)
 #reduces the domains of some roommates according to csg & current assignment
 #to speed backtracking
-def inference(assignments,domains,csg):
+def inference(spogroNum, newstudent, domains,csg):
+	for student in domains.keys():
+		if csg[newstudent][student]==1 and (spogroNum in domains[student]):
+			domains[student].remove(spogroNum)
+
 	return domains #return the new set of domains
 
 
@@ -149,6 +153,9 @@ def inference(assignments,domains,csg):
 def backtrackingSpoGro(assignment, domains, csg, studentFeatures, assignedStudents):
 
 	if len(assignedStudents)==len(domains.keys()):
+		print assignment
+		print assignedStudents
+		print "has actually reached a valid, whole assignment"
 		return assignment
 
 	#  X select unassigned variable 
@@ -168,11 +175,14 @@ def backtrackingSpoGro(assignment, domains, csg, studentFeatures, assignedStuden
 		#id the assignment is valid, recurse.
 		if (assignmentValid(assignment,csg, nextPair, spogro,studentFeatures)):
 			
-			newDomains = inference(assignment, domains, csg) #NEED TO WRITE. NO IDEA IF THIS IS WHAT WE SHOULD PASS
+			newDomains = inference(spogro, nextPair, domains, csg) #NEED TO WRITE. NO IDEA IF THIS IS WHAT WE SHOULD PASS
 			result = backtrackingSpoGro(assignment,newDomains,csg, studentFeatures, assignedStudents)
 			if result: #if this recursive assignment works!
+				print "should return result"
 				return result
 		assignment[spogro].remove(nextPair)
+
+	assignedStudents.remove(nextPair)
 
 	return None
 	
