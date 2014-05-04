@@ -11,6 +11,7 @@
 ## Puts students into Sponsor Groups based on roommate pairs
 
 import helper
+from copy import deepcopy
 
 
 
@@ -63,26 +64,26 @@ def notTogether(i,j,avgPref):
 	#difference must be within 3 points
 	#
 	#j
-	if abs(avgPref[i][8] - avgPref[j][8]) > 8 :
+	if abs(avgPref[i][8] - avgPref[j][8]) > -1 :
 		return True
 	#
 	#k
-	if abs(avgPref[i][9] - avgPref[j][9]) > 8 :
+	if abs(avgPref[i][9] - avgPref[j][9]) > 0 :
 		return True
 
 	#high priority 
 	for q in highPriority :
-		if abs(avgPref[i][q] - avgPref[j][q]) > 8 :
+		if abs(avgPref[i][q] - avgPref[j][q]) > 0 :
 			return True
 
 	#mid priority
 	for q in midPriority :
-		if abs(avgPref[i][q] - avgPref[j][q]) > 91 :
+		if abs(avgPref[i][q] - avgPref[j][q]) > 0 :
 			return True
 
 	#low priority
 	for q in lowPriority :
-		if abs(avgPref[i][q] - avgPref[j][q]) > 91 :
+		if abs(avgPref[i][q] - avgPref[j][q]) > 0 :
 			return True
 
 	#if none of these things happen, then people are similar and we're good! we can put these pairs together! 
@@ -139,10 +140,23 @@ def assignmentValid(assignment,csg, newlyAssignedIndex, spogro, studentFeatures)
 #reduces the domains of some roommates according to csg & current assignment
 #to speed backtracking
 def inference(spogroNum, newstudent, domains,csg):
+	#print "NEW inference"
+	forloop = 0
+	ifstate1 = 0
+	ifstate2 = 0
 	for student in domains.keys():
-		if csg[newstudent][student]==1 and (spogroNum in domains[student]):
-			domains[student].remove(spogroNum)
+		forloop += 1
+		if csg[newstudent][student]==1 :
+			ifstate1 +=1 
+			#print " spogroNum  " + str(spogroNum)
+			#print "stud domains " + str(domains[student])
+			if (spogroNum in domains[student]):
+				ifstate2 += 1
+				domains[student].remove(spogroNum)
 
+	#print "forloop " + str(forloop)
+	#print "if statement 1 " + str(ifstate1)
+	#print "if statement 2 " + str(ifstate2)
 	return domains #return the new set of domains
 
 
@@ -161,10 +175,15 @@ def backtrackingSpoGro(assignment, domains, csg, studentFeatures, assignedStuden
 	#  X select unassigned variable 
 	# USE HEURISTIC
 	nextPair = helper.heuristic(assignedStudents,domains)
+	if not nextPair :
+		print "no next pair!"
+		return None
+
 	assignedStudents.append(nextPair)
 
 	#select an ordering for the domain of X 
 	orderedDomainValues = helper.orderSmallestSpogro(domains[nextPair],assignment)
+	#print "DOMAINS: " + str(orderedDomainValues)
 	
 	
 	# #  for each value in D 
@@ -195,7 +214,7 @@ def sortIntoSponsorGroups(studentPairs,studentFeatures):
 	#gives every roommate pair the opportunity to be with every other roommate pair
 	domainOfEach = range(NUM_SPOGROS)
 	for i in studentPairs.keys():
-		domains[i]= domainOfEach
+		domains[i]= deepcopy(domainOfEach)
 
 	assignment = {}
 	for i in range(30):
