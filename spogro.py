@@ -52,21 +52,15 @@ def notTogether(i,j,avgPref):
 	lowPriority = [4, 6, 7]
 
 
-	"""
-	FUN STUFF
-	there are only 29 pairs assigned when we use these constraints, 
-	and yet it doesn't return None
-	"""
-
 	#prioiritize j & k because they haven't been looked at yet
 	#difference must be within 3 points
 	#
 	#j
-	if abs(avgPref[i][8] - avgPref[j][8]) > -1 :
+	if abs(avgPref[i][8] - avgPref[j][8]) > 3 :
 		return True
 	#
 	#k
-	if abs(avgPref[i][9] - avgPref[j][9]) > 8:
+	if abs(avgPref[i][9] - avgPref[j][9]) > 3:
 		return True
 
 	#high priority 
@@ -171,7 +165,6 @@ def backtrackingSpoGro(assignment, domains, csg, studentFeatures, assignedStuden
 			newDomains = inference(spogro, nextPair, domains, csg)
 			result = backtrackingSpoGro(assignment,newDomains,csg, studentFeatures, assignedStudents)
 			if result: #if this recursive assignment works!
-				print "should return result"
 				return result
 		assignment[spogro].remove(nextPair)
 

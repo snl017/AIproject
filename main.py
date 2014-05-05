@@ -63,8 +63,8 @@ if(malePairs and femalePairs) :
 			
 			
 			#get the purity
-			#purity = helper.purity(clustering,spogros)
-			purity = 0
+			purity = helper.purity(clustering,spogros)
+			#purity = 0
 
 			#PRINT OUTPUTS
 			print "Pairing "+str(i)+":"
