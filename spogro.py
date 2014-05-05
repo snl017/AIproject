@@ -17,8 +17,6 @@ from copy import deepcopy
 
 
 
-#number of sponsor groups
-NUM_SPOGROS=30
 #max number of roommate pairs per sponsor group
 MAX_PAIRS = 10 
 
@@ -68,22 +66,22 @@ def notTogether(i,j,avgPref):
 		return True
 	#
 	#k
-	if abs(avgPref[i][9] - avgPref[j][9]) > 0 :
+	if abs(avgPref[i][9] - avgPref[j][9]) > 8:
 		return True
 
 	#high priority 
 	for q in highPriority :
-		if abs(avgPref[i][q] - avgPref[j][q]) > 0 :
+		if abs(avgPref[i][q] - avgPref[j][q]) > 91 :
 			return True
 
 	#mid priority
 	for q in midPriority :
-		if abs(avgPref[i][q] - avgPref[j][q]) > 0 :
+		if abs(avgPref[i][q] - avgPref[j][q]) > 91 :
 			return True
 
 	#low priority
 	for q in lowPriority :
-		if abs(avgPref[i][q] - avgPref[j][q]) > 0 :
+		if abs(avgPref[i][q] - avgPref[j][q]) > 91 :
 			return True
 
 	#if none of these things happen, then people are similar and we're good! we can put these pairs together! 
@@ -136,27 +134,13 @@ def assignmentValid(assignment,csg, newlyAssignedIndex, spogro, studentFeatures)
 	return True
 
 
-#uses some inference (forward-checking someday?)
+#uses Forward-checking
 #reduces the domains of some roommates according to csg & current assignment
 #to speed backtracking
 def inference(spogroNum, newstudent, domains,csg):
-	#print "NEW inference"
-	forloop = 0
-	ifstate1 = 0
-	ifstate2 = 0
 	for student in domains.keys():
-		forloop += 1
-		if csg[newstudent][student]==1 :
-			ifstate1 +=1 
-			#print " spogroNum  " + str(spogroNum)
-			#print "stud domains " + str(domains[student])
-			if (spogroNum in domains[student]):
-				ifstate2 += 1
-				domains[student].remove(spogroNum)
-
-	#print "forloop " + str(forloop)
-	#print "if statement 1 " + str(ifstate1)
-	#print "if statement 2 " + str(ifstate2)
+		if csg[newstudent][student]==1 and spogroNum in domains[student]:
+			domains[student].remove(spogroNum)
 	return domains #return the new set of domains
 
 
@@ -167,16 +151,13 @@ def inference(spogroNum, newstudent, domains,csg):
 def backtrackingSpoGro(assignment, domains, csg, studentFeatures, assignedStudents):
 
 	if len(assignedStudents)==len(domains.keys()):
-		print assignment
-		print assignedStudents
-		print "has actually reached a valid, whole assignment"
 		return assignment
 
 	#  X select unassigned variable 
 	# USE HEURISTIC
 	nextPair = helper.heuristic(assignedStudents,domains)
-	if not nextPair :
-		print "no next pair!"
+	if nextPair==None:
+		print "No next pair! A domain is empty!"
 		return None
 
 	assignedStudents.append(nextPair)
@@ -193,8 +174,9 @@ def backtrackingSpoGro(assignment, domains, csg, studentFeatures, assignedStuden
 		
 		#id the assignment is valid, recurse.
 		if (assignmentValid(assignment,csg, nextPair, spogro,studentFeatures)):
-			
-			newDomains = inference(spogro, nextPair, domains, csg) #NEED TO WRITE. NO IDEA IF THIS IS WHAT WE SHOULD PASS
+
+			#newDomains = domains
+			newDomains = inference(spogro, nextPair, domains, csg)
 			result = backtrackingSpoGro(assignment,newDomains,csg, studentFeatures, assignedStudents)
 			if result: #if this recursive assignment works!
 				print "should return result"
@@ -212,12 +194,12 @@ def sortIntoSponsorGroups(studentPairs,studentFeatures):
 	csg = createConstraintGraph(studentPairs,studentFeatures)
 	domains = {}
 	#gives every roommate pair the opportunity to be with every other roommate pair
-	domainOfEach = range(NUM_SPOGROS)
+	domainOfEach = range(helper.NUM_SPOGROS)
 	for i in studentPairs.keys():
 		domains[i]= deepcopy(domainOfEach)
 
 	assignment = {}
-	for i in range(30):
+	for i in range(helper.NUM_SPOGROS):
 		assignment[i]=[]
 
 	#backtracks
