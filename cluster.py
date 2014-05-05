@@ -13,7 +13,6 @@ import numpy
 def selectSeeds(studentPairs, K) :
 	random.shuffle(studentPairs)
 	seeds = studentPairs[:30]
-	print "these are seeds: " + str(seeds)
 	return seeds
 
 #returns the index of the closest centroid

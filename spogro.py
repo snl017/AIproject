@@ -78,7 +78,7 @@ def notTogether(i,j,avgPref):
 
 	#low priority
 	for q in lowPriority :
-		if abs(avgPref[i][q] - avgPref[j][q]) > 91 :
+		if abs(avgPref[i][q] - avgPref[j][q]) > 8 :
 			return True
 
 	#if none of these things happen, then people are similar and we're good! we can put these pairs together! 
