@@ -12,6 +12,7 @@
 
 import helper
 from copy import deepcopy
+import time
 
 
 
@@ -157,10 +158,13 @@ def inference(spogroNum, newstudent, domains,csg):
 #domains is a dictionary
 #csg is a matrix (list of lists) of whether the pairs can be matched.
 #puts roommate pairs in sponsor groups
-def backtrackingSpoGro(assignment, domains, csg, studentFeatures, assignedStudents):
+def backtrackingSpoGro(assignment, domains, csg, studentFeatures, assignedStudents, timeout):
 
 	if len(assignedStudents)==len(domains.keys()):
 		return assignment
+
+	if time.time()>timeout:
+		return None
 
 	#  X select unassigned variable 
 	# USE HEURISTIC
@@ -178,7 +182,7 @@ def backtrackingSpoGro(assignment, domains, csg, studentFeatures, assignedStuden
 		if (assignmentValid(assignment,csg, nextPair, spogro,studentFeatures)):
 			#newDomains = domains
 			newDomains = inference(spogro, nextPair, domains, csg)
-			result = backtrackingSpoGro(assignment,newDomains,csg, studentFeatures, assignedStudents)
+			result = backtrackingSpoGro(assignment,newDomains,csg, studentFeatures, assignedStudents,timeout)
 			if result: #if this recursive assignment works!
 				return result
 		assignment[spogro].remove(nextPair)
@@ -190,6 +194,7 @@ def backtrackingSpoGro(assignment, domains, csg, studentFeatures, assignedStuden
 #sorts students into sponsor groups
 #note: studentPairs is a dictionary from half the students to their roommates
 def sortIntoSponsorGroups(studentPairs,studentFeatures):
+	timeout = time.time()+60
 	#creates a csg
 	csg = createConstraintGraph(studentPairs,studentFeatures)
 	domains = {}
@@ -203,7 +208,7 @@ def sortIntoSponsorGroups(studentPairs,studentFeatures):
 		assignment[i]=[]
 
 	#backtracks
-	result = backtrackingSpoGro(assignment, domains, csg, studentFeatures, [])
+	result = backtrackingSpoGro(assignment, domains, csg, studentFeatures, [],timeout)
 
 	return result
 

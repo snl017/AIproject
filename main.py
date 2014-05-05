@@ -10,6 +10,8 @@ import helper
 import cluster
 from copy import deepcopy
 
+NUM_RUNS = 50
+
 
 #MAIN FUNCTION
 
@@ -27,67 +29,74 @@ for i in studentDict.keys():
 		femaleStudentsFeatures[i]=studentDict[i]
 
 #RUN AC-3 ON PEOPLE
-#create the array of arc-consistent domains (possible roommates) for each student
-domainsMale= roommate.arcConsistentDomains(maleStudentsFeatures)
-domainsFemale = roommate.arcConsistentDomains(femaleStudentsFeatures)
 
-#RUN BACKTRACKING_PAIRS ON PEOPLE -> ROOMMATES
-#get the set of roommate pairs
-malePairs= roommate.backtrackingPairs({}, domainsMale) #this is a dictionary of the roommate pairs!
-femalePairs = roommate.backtrackingPairs({}, domainsFemale)
-if(malePairs and femalePairs) :
-	malePairs.update(femalePairs)
-	pairs = malePairs
-	# print pairs
-	# print len(pairs)
-	uniquePairs = roommate.uniquifyPairs(pairs)
 
-	#get the clustering of the students	
-	clustering = cluster.kcluster(uniquePairs,studentDict,helper.NUM_SPOGROS)
-	#print uniquePairs
+totalPurity = 0
+successfulRuns = 0
+for runNum in range(NUM_RUNS):
+	#create the array of arc-consistent domains (possible roommates) for each student
+	domainsMale= roommate.arcConsistentDomains(maleStudentsFeatures)
+	domainsFemale = roommate.arcConsistentDomains(femaleStudentsFeatures)
 
-	#use for testing (by just replacing uniquePairs with uniquePairsTEST below)
-	uniquePairsTEST = {}
-	for i in range(3) :
-		stud = uniquePairs.keys()[i]
-		uniquePairsTEST[stud] = uniquePairs[stud]
+	#RUN BACKTRACKING_PAIRS ON PEOPLE -> ROOMMATES
+	#get the set of roommate pairs
+	malePairs= roommate.backtrackingPairs({}, domainsMale) #this is a dictionary of the roommate pairs!
+	femalePairs = roommate.backtrackingPairs({}, domainsFemale)
+	if(malePairs and femalePairs) :
+		malePairs.update(femalePairs)
+		pairs = malePairs
+		# print pairs
+		# print len(pairs)
+		uniquePairs = roommate.uniquifyPairs(pairs)
 
-	for i in range(1) :
+		#get the clustering of the students	
+		clustering = cluster.kcluster(uniquePairs,studentDict,helper.NUM_SPOGROS)
+		#print uniquePairs
+
+		#use for testing (by just replacing uniquePairs with uniquePairsTEST below)
+		uniquePairsTEST = {}
+		for i in range(3) :
+			stud = uniquePairs.keys()[i]
+			uniquePairsTEST[stud] = uniquePairs[stud]
+
+
 		spogros = spogro.sortIntoSponsorGroups(uniquePairs,studentDict)
 
 		#if sponsor groups could not be assigned
-		if not spogros :
-			print "Students were not sorted into sponsor groups!"
-		else: 
+		#if not spogros :
+			#print "Students were not sorted into sponsor groups in run "+str(runNum)
+		#else:
+		if spogros: 
+			successfulRuns+=1
 
-			
-			
 			#get the purity
 			purity = helper.purity(clustering,spogros)
-			#purity = 0
+			totalPurity +=purity
 
 			#PRINT OUTPUTS
-			print "Pairing "+str(i)+":"
+			print "Run "+str(runNum)+":"
 			print "The sponsor groups were created with "+str(purity)+" purity!"
 			#puts students' roommate pairs into their sponsor groups
 			spogrosWithAllStudents = deepcopy(spogros)
-			for spogro in spogrosWithAllStudents.values():
+			for sponsorgro in spogrosWithAllStudents.values():
 		 		for student in uniquePairs.keys():
-		 			if student in spogro:
-		 				spogro.append(uniquePairs[student])
-		 	print "Here are the sponsor groups (made by our algorithm): "
-			print spogrosWithAllStudents
-			lengths = [len(spogro) for spogro in spogrosWithAllStudents.values()]
+		 			if student in sponsorgro:
+		 				sponsorgro.append(uniquePairs[student])
+		 	#print "Here are the sponsor groups (made by our algorithm): "
+			#print spogrosWithAllStudents
+			lengths = [len(spogro1) for spogro1 in spogrosWithAllStudents.values()]
 			print "Maximum size spogro: "+str(max(lengths))
 			print "Minimum size spogro: "+str(min(lengths))
 
-else :
-	if(malePairs) :
-		print "Failed to find female roommate pairings"
-	elif(femalePairs) :
-		print "Failed to find male roommate pairings"
-	else:
-		print "Failed to find roommate pairs satisfying constraints"
+	#else :
+		# if(malePairs) :
+		# 	print "Failed to find female roommate pairings for run "+str(runNum)
+		# elif(femalePairs) :
+		# 	print "Failed to find male roommate pairings for run "+str(runNum)
+		# else:
+		# 	print "Failed to find roommate pairs satisfying constraints for run "+str(runNum)
 	
+print "Successful Runs: "+str(successfulRuns)+"/"+str(NUM_RUNS)
+print "Average Purity: "+str(totalPurity/float(successfulRuns))
 	#RUN AC-3 ON ROOMMATE PAIRS
 	#RUN REAL BACKTRACKING ON ROOMMATE PAIRS AS WE ASSIGN TO SPONSOR GROUPS
