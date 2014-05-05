@@ -122,8 +122,6 @@ def assignmentValid(assignment,csg, newlyAssignedIndex, spogro, studentFeatures)
 				male+=1
 			#if the newly assigned student clashes with anyone in their spogro, NO
 			if csg[newlyAssignedIndex][student]==1:
-				print newlyAssignedIndex
-				print student
 				return False
 	#percent of male students in spogro
 	percentMale = float(male) /float(len(peopleInSpoGro)-1)
@@ -158,25 +156,17 @@ def backtrackingSpoGro(assignment, domains, csg, studentFeatures, assignedStuden
 	#  X select unassigned variable 
 	# USE HEURISTIC
 	nextPair = helper.heuristic(assignedStudents,domains)
-	if nextPair==None:
-		print "No next pair! A domain is empty!"
-		return None
-
 	assignedStudents.append(nextPair)
 
 	#select an ordering for the domain of X 
 	orderedDomainValues = helper.orderSmallestSpogro(domains[nextPair],assignment)
-	#print "DOMAINS: " + str(orderedDomainValues)
-	
 	
 	# #  for each value in D 
 	for spogro in orderedDomainValues:
 		#  add the pair to assignment 
 		assignment[spogro].append(nextPair)
-		print assignment
 		#id the assignment is valid, recurse.
 		if (assignmentValid(assignment,csg, nextPair, spogro,studentFeatures)):
-			print "is valid " + str(assignment)
 			#newDomains = domains
 			newDomains = inference(spogro, nextPair, domains, csg)
 			result = backtrackingSpoGro(assignment,newDomains,csg, studentFeatures, assignedStudents)

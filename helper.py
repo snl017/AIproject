@@ -83,8 +83,11 @@ def orderSmallestSpogro(domain, sponsorGroups):
 	sizeSpogros = [len(x) for x in sponsorGroups.values()]
 
 	smallToLarge = [x for (y,x) in sorted(zip(sizeSpogros, spoGroNumList))]
-	#print smallToLarge
-	return smallToLarge
+	toReturn = []
+	for elt in smallToLarge : 
+		if elt in domain : 
+			toReturn.append(elt) 
+	return toReturn
 
 
 
