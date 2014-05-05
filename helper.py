@@ -7,6 +7,8 @@ import random
 
 #number of sponsor groups
 NUM_SPOGROS=30
+#number of students
+NUM_STUDENTS = 414
 #helper methods
 
 

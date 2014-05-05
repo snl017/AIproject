@@ -19,6 +19,8 @@ from copy import deepcopy
 
 #max number of roommate pairs per sponsor group
 MAX_PAIRS = 10 
+#minimum number of roommate pairs per spogro
+MIN_PAIRS = 5
 
 
 """
@@ -66,7 +68,7 @@ def notTogether(i,j,avgPref):
 	#high priority 
 	for q in highPriority :
 		#fails if make difference smaller with current numbers
-		if abs(avgPref[i][q] - avgPref[j][q]) > 6 :
+		if abs(avgPref[i][q] - avgPref[j][q]) > 91 :
 			return True
 
 	#mid priority
@@ -108,6 +110,18 @@ def assignmentValid(assignment,csg, newlyAssignedIndex, spogro, studentFeatures)
 		return False
 	if len(peopleInSpoGro)==1:
 		return True
+	#check if min pairs
+	if len(peopleInSpoGro)>MIN_PAIRS:
+		needToBeAddedCount = 0
+		totalAssigned = 0
+		for spogro in assignment.keys():
+			spogroLength = len(assignment[spogro])
+			totalAssigned+=spogroLength
+			if spogroLength<MIN_PAIRS:
+				needToBeAddedCount+=(MIN_PAIRS - spogroLength)
+		if (helper.NUM_STUDENTS/2 -totalAssigned)<needToBeAddedCount:
+			return False
+
 	#counter for male students in spogro
 	male = 0
 	#count the number of males
