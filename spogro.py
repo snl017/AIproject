@@ -94,8 +94,8 @@ def notTogether(i,j,avgPref):
 def createConstraintGraph(studentPairs, studentFeatures):
 	avgPref = helper.averagePref(studentPairs, studentFeatures)
 
-
-	csg = [[0]*(2*len(studentPairs.keys()))]*(2*len(studentPairs.keys()))
+	numRowsCols = 2*len(studentPairs.keys())
+	csg = [[0]*numRowsCols for i in range (numRowsCols)]
 	for i in studentPairs.keys():
 		for j in studentPairs.keys():
 			if (notTogether(i,j,avgPref)):
@@ -122,6 +122,8 @@ def assignmentValid(assignment,csg, newlyAssignedIndex, spogro, studentFeatures)
 				male+=1
 			#if the newly assigned student clashes with anyone in their spogro, NO
 			if csg[newlyAssignedIndex][student]==1:
+				print newlyAssignedIndex
+				print student
 				return False
 	#percent of male students in spogro
 	percentMale = float(male) /float(len(peopleInSpoGro)-1)
@@ -171,10 +173,10 @@ def backtrackingSpoGro(assignment, domains, csg, studentFeatures, assignedStuden
 	for spogro in orderedDomainValues:
 		#  add the pair to assignment 
 		assignment[spogro].append(nextPair)
-		
+		print assignment
 		#id the assignment is valid, recurse.
 		if (assignmentValid(assignment,csg, nextPair, spogro,studentFeatures)):
-
+			print "is valid " + str(assignment)
 			#newDomains = domains
 			newDomains = inference(spogro, nextPair, domains, csg)
 			result = backtrackingSpoGro(assignment,newDomains,csg, studentFeatures, assignedStudents)

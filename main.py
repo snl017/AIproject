@@ -45,6 +45,13 @@ if(malePairs and femalePairs) :
 	#get the clustering of the students	
 	clustering = cluster.kcluster(uniquePairs,studentDict,helper.NUM_SPOGROS)
 	#print uniquePairs
+
+	#use for testing (by just replacing uniquePairs with uniquePairsTEST below)
+	uniquePairsTEST = {}
+	for i in range(3) :
+		stud = uniquePairs.keys()[i]
+		uniquePairsTEST[stud] = uniquePairs[stud]
+
 	for i in range(1) :
 		spogros = spogro.sortIntoSponsorGroups(uniquePairs,studentDict)
 
@@ -56,8 +63,8 @@ if(malePairs and femalePairs) :
 			
 			
 			#get the purity
-			purity = helper.purity(clustering,spogros)
-
+			#purity = helper.purity(clustering,spogros)
+			purity = 0
 
 			#PRINT OUTPUTS
 			print "Pairing "+str(i)+":"
