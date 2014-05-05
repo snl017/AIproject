@@ -58,22 +58,22 @@ def notTogether(i,j,avgPref):
 	#difference must be within 3 points
 	#
 	#j
-	if abs(avgPref[i][8] - avgPref[j][8]) > 3 :
+	if abs(avgPref[i][8] - avgPref[j][8]) > 5 :
 		return True
 	#
 	#k
-	if abs(avgPref[i][9] - avgPref[j][9]) > 3:
+	if abs(avgPref[i][9] - avgPref[j][9]) > 5:
 		return True
 
 	#high priority 
 	for q in highPriority :
 		#fails if make difference smaller with current numbers
-		if abs(avgPref[i][q] - avgPref[j][q]) > 91 :
+		if abs(avgPref[i][q] - avgPref[j][q]) > 6 :
 			return True
 
 	#mid priority
 	for q in midPriority :
-		if abs(avgPref[i][q] - avgPref[j][q]) > 91 :
+		if abs(avgPref[i][q] - avgPref[j][q]) > 7 :
 			return True
 
 	#low priority

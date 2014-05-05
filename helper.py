@@ -55,9 +55,10 @@ def heuristic(alreadyAssigned, domains):
 	smallestDomain = float("inf")
 	toReturn = None
 	for i in domains.keys():
+		length = len(domains[i])
 		if not (i in alreadyAssigned):
-			if smallestDomain>len(domains[i]):
-				smallestDomain=len(domains[i])
+			if smallestDomain>length:
+				smallestDomain=length
 				toReturn =i
 
 	return toReturn
