@@ -65,7 +65,8 @@ def notTogether(i,j,avgPref):
 
 	#high priority 
 	for q in highPriority :
-		if abs(avgPref[i][q] - avgPref[j][q]) > 91 :
+		#fails if make difference smaller with current numbers
+		if abs(avgPref[i][q] - avgPref[j][q]) > 6 :
 			return True
 
 	#mid priority
