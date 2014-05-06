@@ -3,6 +3,7 @@
 #Spring 2014
 
 import random
+import numpy
 
 
 #number of sponsor groups
@@ -10,6 +11,54 @@ NUM_SPOGROS=30
 #number of students
 NUM_STUDENTS = 414
 #helper methods
+
+def computeAverageForList(avgPairFeatures,cluster):
+	num_featuresOfList = len(avgPairFeatures[0])
+	#average all things in the cluster
+	sums = numpy.array([0]*num_featuresOfList) #length of number of elements
+	averagesToReturn = [0]*num_featuresOfList
+
+	#for each student, add their values.
+	for studentX in cluster:
+		xFeatures = avgPairFeatures[studentX]
+		sums = sums + numpy.array(xFeatures)
+	for j in range(num_featuresOfList):
+		averagesToReturn[j] = round(float(sums[j])/len(cluster),3)
+	#return the averages
+	return averagesToReturn
+
+
+#ANALYZES THE OUTPUT
+#note: clustering & spogros are incomplete. student features is actually averages.
+def analyze(studentFeaturesForPair, clustering, spogros, purity):
+	num_features = len(studentFeaturesForPair)
+	toPrintSpogroList = []
+	print "Purity: "+str(purity)
+	print "Sponsor Group:"
+	lengths = [len(spogro1) for spogro1 in spogros.values()]
+	print "Maximum size spogro: "+str(max(lengths)*2)
+	print "Minimum size spogro: "+str(min(lengths)*2)
+	#find average feature set for each spogro. 
+	for i in spogros.keys():
+		studentAverages = computeAverageForList(studentFeaturesForPair,spogros[i])
+		for x in studentAverages:
+			if x<=2 or x>=9:
+				print "For Sponsor Group "+str(i)+", of size "+str(len(spogros[i])) +". Averages: "
+				print computeAverageForList(studentFeaturesForPair,spogros[i])
+				toPrintSpogroList.append(i)
+
+	print "Clusters:"
+	lengths = [len(cluster) for cluster in clustering]
+	print "Maximum size cluster: "+str(max(lengths)*2)
+	print "Minimum size spogro: "+str(min(lengths)*2)
+	for i in range(len(clustering)) :
+		majorityLabelForCluster = majorityLabel(clustering[i], spogros)
+		if majorityLabelForCluster in toPrintSpogroList:
+			print "For Cluster with Majority Label "+str(majorityLabel(clustering[i],spogros))+", of size "+str(len(clustering[i]) )+" Averages: "
+			print computeAverageForList(studentFeaturesForPair,clustering[i])
+
+
+
 
 
 #put the students into a dictionary where a student maps to its sponsor group
@@ -22,8 +71,18 @@ def studentMaps(assignment):
 			toReturn[student]=i
 			numStudents += 1
 		i+=1
-	print "STUDENTS NUM: " + str(numStudents)
+	#print "STUDENTS NUM: " + str(numStudents)
 	return toReturn
+
+def majorityLabel(cluster,assignment):
+	numsOfEachLabel = [0]*NUM_SPOGROS
+	studentAssignments = studentMaps(assignment)
+	for student in cluster:
+		#find its label
+		label = studentAssignments[student]
+		numsOfEachLabel[label]+=1
+	#find the best label for this cluster
+	return numsOfEachLabel.index(max(numsOfEachLabel))
 
 
 #get the purity of a clustering given the assignment
@@ -33,13 +92,7 @@ def purity(clusters, assignment):
 	total = 0
 	#for each cluster
 	for cluster in clusters:
-		numsOfEachLabel = [0]*NUM_SPOGROS
-		for student in cluster:
-			#find its label
-			label = studentAssignments[student]
-			numsOfEachLabel[label]+=1
-		#find the best label for this cluster
-		bestLabel = numsOfEachLabel.index(max(numsOfEachLabel))
+		bestLabel = majorityLabel(cluster, assignment)
 		#find the number of students in this cluster for which the label is correct
 		for student in cluster:
 			total +=1

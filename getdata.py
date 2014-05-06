@@ -36,7 +36,6 @@ def getStudentValues():
 				indivValues.append(cellVal)
 		studentValues[numStudent] = indivValues
 	   	numStudent += 1
-
 	return studentValues
 
 

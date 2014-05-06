@@ -35,6 +35,11 @@ def closestCentroid(studentX, avgPairFeatures, centroids) :
 	#return the index of the closest centroid
 	return distances.index(min(distances))
 
+
+
+
+
+
 #TODO: COMPUTE CENTROIDS!!!!!!!!!!!!
 def computeCentroids(clusters,K,avgPairFeatures):
 	centroids = [-1]*K
@@ -42,20 +47,7 @@ def computeCentroids(clusters,K,avgPairFeatures):
 	for i in range(len(clusters)) :
 		#i am going to have to average all the things in the cluster,
 		#but for now i'm just setting the centroid to be the first one
-
-		#average all things in the cluster
-		sums = numpy.array([0]*num_features) #length of number of elements
-		averages = [0]*num_features
-
-		#for each student, add their values.
-		for studentX in clusters[i]:
-			xFeatures = avgPairFeatures[studentX]
-			sums = sums + numpy.array(xFeatures)
-		for j in range(num_features):
-			averages[j] = float(sums[j])/len(clusters[i])
-
-		centroids[i] = averages
-
+		centroids[i] = helper.computeAverageForList(avgPairFeatures,clusters[i])
 
 
 		# #average all things in the cluster.

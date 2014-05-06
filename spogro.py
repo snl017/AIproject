@@ -59,27 +59,27 @@ def notTogether(i,j,avgPref):
 	#difference must be within 3 points
 	#
 	#j
-	if abs(avgPref[i][8] - avgPref[j][8]) > 5 :
+	if abs(avgPref[i][8] - avgPref[j][8]) > 3 :
 		return True
 	#
 	#k
-	if abs(avgPref[i][9] - avgPref[j][9]) > 5:
+	if abs(avgPref[i][9] - avgPref[j][9]) > 3:
 		return True
 
 	#high priority 
 	for q in highPriority :
 		#fails if make difference smaller with current numbers
-		if abs(avgPref[i][q] - avgPref[j][q]) > 6 :
+		if abs(avgPref[i][q] - avgPref[j][q]) > 4 :
 			return True
 
 	#mid priority
 	for q in midPriority :
-		if abs(avgPref[i][q] - avgPref[j][q]) > 7 :
+		if abs(avgPref[i][q] - avgPref[j][q]) > 6 :
 			return True
 
 	#low priority
 	for q in lowPriority :
-		if abs(avgPref[i][q] - avgPref[j][q]) > 8 :
+		if abs(avgPref[i][q] - avgPref[j][q]) > 7 :
 			return True
 
 	#if none of these things happen, then people are similar and we're good! we can put these pairs together! 
@@ -194,7 +194,7 @@ def backtrackingSpoGro(assignment, domains, csg, studentFeatures, assignedStuden
 #sorts students into sponsor groups
 #note: studentPairs is a dictionary from half the students to their roommates
 def sortIntoSponsorGroups(studentPairs,studentFeatures):
-	timeout = time.time()+60
+	timeout = time.time()+30
 	#creates a csg
 	csg = createConstraintGraph(studentPairs,studentFeatures)
 	domains = {}

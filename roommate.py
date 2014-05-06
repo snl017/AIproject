@@ -24,9 +24,9 @@ def pairAllowed(x,y,studentFeatures):
 	#We will see how different the variables are, narrowing down till it fails, 
 	# and then going one up
 	if studentFeatures[x][0] == 'M' :
-		numDiff = 7
-	else :
 		numDiff = 6
+	else :
+		numDiff = 5
 
 	#range does NOT look at last two numbers in feature vector (that relate to sponsor groups)
 	for featureIdx in range(1,len(studentFeatures[x])-2) :
