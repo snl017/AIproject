@@ -11,51 +11,126 @@ NUM_SPOGROS=30
 #number of students
 NUM_STUDENTS = 414
 #helper methods
-
-def computeAverageForList(avgPairFeatures,cluster):
-	num_featuresOfList = len(avgPairFeatures[0])
-	#average all things in the cluster
-	sums = numpy.array([0]*num_featuresOfList) #length of number of elements
-	averagesToReturn = [0]*num_featuresOfList
+def average(vector):
+	num_feats = len(vector[0])
+	sums = numpy.array([0]*num_feats) #length of number of elements
+	averages = [0]*num_feats
 
 	#for each student, add their values.
-	for studentX in cluster:
-		xFeatures = avgPairFeatures[studentX]
-		sums = sums + numpy.array(xFeatures)
-	for j in range(num_featuresOfList):
-		averagesToReturn[j] = round(float(sums[j])/len(cluster),3)
+	for element in vector:
+		sums = sums + numpy.array(element)
+	for j in range(num_feats):
+		averages[j] = float(sums[j])/len(vector)
 	#return the averages
-	return averagesToReturn
+	return averages 
 
+def computeSingleNumberDifference(featureList1,featureList2):
+	differenceVector = computeDifference(featureList1, featureList2)
+	return sum(differenceVector)/float(len(differenceVector))
+
+def computeDifference(featureList1, featureList2):
+	featureArray1 = numpy.array(featureList1)
+	featureArray2 = numpy.array(featureList2)
+	diffArray = featureArray1-featureArray2
+	absDiffArray = numpy.absolute(diffArray)
+	return absDiffArray.tolist()
+
+def computeAverageForList(avgPairFeatures,cluster):
+	toAverage = []
+	for studentX in cluster:
+		toAverage.append(avgPairFeatures[studentX])
+	return average(toAverage)
 
 #ANALYZES THE OUTPUT
 #note: clustering & spogros are incomplete. student features is actually averages.
 def analyze(studentFeaturesForPair, clustering, spogros, purity):
+	total_averages = [6.529, 6.345, 6.821, 7.316, 7.6134, 7.35, 7.72, 6.79, 4.375, 6.265]
 	num_features = len(studentFeaturesForPair)
 	toPrintSpogroList = []
-	print "Purity: "+str(purity)
-	print "Sponsor Group:"
-	lengths = [len(spogro1) for spogro1 in spogros.values()]
-	print "Maximum size spogro: "+str(max(lengths)*2)
-	print "Minimum size spogro: "+str(min(lengths)*2)
+	# print "Purity: "+str(purity)
+	# print "Sponsor Group:"
+	# lengths = [len(spogro1) for spogro1 in spogros.values()]
+	# print "Maximum size spogro: "+str(max(lengths)*2)
+	# print "Minimum size spogro: "+str(min(lengths)*2)
 	#find average feature set for each spogro. 
+	differencesForSpogros= []
+	spogroDistancesForEachStudent = []
+	differencesForTotals = []
+	totalDistancesForEachStudent = []
+	#FOR KEEPING IT A VECTOR TO AVERAGE
+	vectorDistancesForStudentsSpogro = [] #vector of vectors
+	vectorDistancesForStudentsTotal = []
+
 	for i in spogros.keys():
 		studentAverages = computeAverageForList(studentFeaturesForPair,spogros[i])
-		for x in studentAverages:
-			if x<=2 or x>=9:
-				print "For Sponsor Group "+str(i)+", of size "+str(len(spogros[i])) +". Averages: "
-				print computeAverageForList(studentFeaturesForPair,spogros[i])
-				toPrintSpogroList.append(i)
+		differencesListFromSpogro = []
+		differencesListFromTotal = []
+		for studentY in spogros[i]:
+			differenceVectorSpogro = computeDifference(studentAverages, studentFeaturesForPair[studentY])
+			differenceVectorTotal = computeDifference(total_averages,studentFeaturesForPair[studentY])
+			vectorDistancesForStudentsSpogro.append(differenceVectorSpogro)
+			vectorDistancesForStudentsTotal.append(differenceVectorTotal)
 
-	print "Clusters:"
-	lengths = [len(cluster) for cluster in clustering]
-	print "Maximum size cluster: "+str(max(lengths)*2)
-	print "Minimum size spogro: "+str(min(lengths)*2)
-	for i in range(len(clustering)) :
-		majorityLabelForCluster = majorityLabel(clustering[i], spogros)
-		if majorityLabelForCluster in toPrintSpogroList:
-			print "For Cluster with Majority Label "+str(majorityLabel(clustering[i],spogros))+", of size "+str(len(clustering[i]) )+" Averages: "
-			print computeAverageForList(studentFeaturesForPair,clustering[i])
+	# 		differenceSpogro = computeSingleNumberDifference(studentAverages, studentFeaturesForPair[studentY])
+	# 		differenceTotal = computeSingleNumberDifference(total_averages,studentFeaturesForPair[studentY])
+	# 		differencesListFromSpogro.append(differenceSpogro)
+	# 		differencesListFromTotal.append(differenceTotal)
+	# 		spogroDistancesForEachStudent.append(differenceSpogro)
+	# 		totalDistancesForEachStudent.append(differenceTotal)
+	# 	averageDifferenceForSpoGro = sum(differencesListFromSpogro)/float(len(differencesListFromSpogro))
+	# 	averageDifferenceForTotal = sum(differencesListFromTotal)/float(len(differencesListFromTotal))
+	# 	differencesForSpogros.append(averageDifferenceForSpoGro)
+	# 	differencesForTotals.append(averageDifferenceForTotal)
+	# sumDifferenceSpogro = sum(differencesForSpogros)
+	# sumDifferenceTotal = sum(differencesForTotals)
+	# print "Average spogro difference, averaging over sponsor group:"
+	# print float(sumDifferenceSpogro)/float(len(differencesForSpogros))
+	# print "Average total difference, averaging over sponsor group:"
+	# print float(sumDifferenceTotal)/float(len(differencesForTotals))
+	# averageStudentSpoGroDist = (sum(spogroDistancesForEachStudent))/float(len(spogroDistancesForEachStudent))
+	# averageStudentTotalDist =  (sum(totalDistancesForEachStudent))/float(len(totalDistancesForEachStudent))
+	# maxStudentSpoGroDist = max(spogroDistancesForEachStudent)
+	# minStudentSpoGroDist = min(spogroDistancesForEachStudent)
+	# maxStudentTotalDist = max(totalDistancesForEachStudent)
+	# minStudentTotalDist = min(totalDistancesForEachStudent)
+	# print "BY STUDENT:"
+	# print "FROM SPONSOR GROUPS:"
+	# print "max: "+str(maxStudentSpoGroDist)
+	# print "average: "+str(averageStudentSpoGroDist)
+	# print "min: "+str(minStudentSpoGroDist)
+	# print "FROM AVERAGE:"
+	# print "max: "+str(maxStudentTotalDist)
+	# print "average: "+str(averageStudentTotalDist)
+	# print "min: "+str(minStudentTotalDist)
+
+	##AVERAGE THE STUDENTS' DIFFERENCES
+	# print "BY STUDENT, WHOLE VECTOR:"
+	fromspogro = average(vectorDistancesForStudentsSpogro)
+	fromtotal = average(vectorDistancesForStudentsTotal)
+	# print "Spogro:"
+	# print fromspogro
+	# print "From Average:"
+	# print fromtotal
+	return [fromspogro,fromtotal]
+
+
+
+		# for x in studentAverages:
+		# 	if x<=2 or x>=9:
+		# 		print "For Sponsor Group "+str(i)+", of size "+str(len(spogros[i])*2) +". Averages: "
+		# 		print computeAverageForList(studentFeaturesForPair,spogros[i])
+		# 		toPrintSpogroList.append(i)
+
+	
+	# print "Clusters:"
+	# lengths = [len(cluster) for cluster in clustering]
+	# print "Maximum size cluster: "+str(max(lengths)*2)
+	# print "Minimum size cluster: "+str(min(lengths)*2)
+	# for i in range(len(clustering)) :
+	# 	majorityLabelForCluster = majorityLabel(clustering[i], spogros)
+	# 	if majorityLabelForCluster in toPrintSpogroList:
+	# 		print "For Cluster with Majority Label "+str(majorityLabel(clustering[i],spogros))+", of size "+str(len(clustering[i])*2)+" Averages: "
+	# 		print computeAverageForList(studentFeaturesForPair,clustering[i])
 
 
 
