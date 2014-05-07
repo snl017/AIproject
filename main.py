@@ -10,7 +10,7 @@ import helper
 import cluster
 from copy import deepcopy
 
-NUM_RUNS = 50
+NUM_RUNS = 300
 
 
 #MAIN FUNCTION
