@@ -15,7 +15,7 @@ MIN_PAIRS = 2
 
 NUM_SPOGROS = 4
 
-NUM_STUDENTS = 20
+NUM_STUDENTS = 18
 
 
 #returns true if pairs i and j CANNOT be in the same group

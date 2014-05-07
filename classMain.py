@@ -21,11 +21,13 @@ pairs= roommate.backtrackingPairs({}, domains)
 if pairs :
 	uniquePairs = roommate.uniquifyPairs(pairs)
 	spogros = classSpogro.sortIntoSponsorGroups(uniquePairs,studentDict)
-	spogrosWithAllStudents = deepcopy(spogros)
- 	print "Here are the sponsor groups (made by our algorithm): "
-	for sg in spogros.keys() :
-		print "Sponsor Group #" + str(sg) 
-		for stud in spogros[sg] :
-			print str(studentNames[stud]) + " and " + str(studentNames[pairs[stud]])
+	if spogros :
+ 		print "Here are the sponsor groups (made by our algorithm): "
+		for sg in spogros.keys() :
+			print "Sponsor Group #" + str(sg) 
+			for stud in spogros[sg] :
+				print str(studentNames[stud]) + " and " + str(studentNames[pairs[stud]])
+	else :
+		print "no spogros"
 else :
 	print "failed to find pairs"

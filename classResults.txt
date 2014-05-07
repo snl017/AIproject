@@ -1,0 +1,49 @@
+classResults.txt
+
+Shannon-Lubetichs-MacBook-Pro:AIproject Shannon$ python classMain.py 
+Here are the sponsor groups (made by our algorithm): 
+Sponsor Group #0
+Brian and AvgJoe
+Jessie and Lingge
+Kahea and Nathan
+Sponsor Group #1
+America and Amy
+Garrett and Shannon
+Sponsor Group #2
+Matt and Arthi
+Mauricio and Michael
+Sponsor Group #3
+Dustin and Sarah
+Siyao and Erick
+
+Shannon-Lubetichs-MacBook-Pro:AIproject Shannon$ python classMain.py 
+Here are the sponsor groups (made by our algorithm): 
+Sponsor Group #0
+Brian and AvgJoe
+Dustin and Sarah
+Kahea and Siyao
+Sponsor Group #1
+Jessie and Garrett
+America and Amy
+Sponsor Group #2
+Nathan and Matt
+Michael and Arthi
+Sponsor Group #3
+Mauricio and Shannon
+Erick and Lingge
+
+Shannon-Lubetichs-MacBook-Pro:AIproject Shannon$ python classMain.py 
+Here are the sponsor groups (made by our algorithm): 
+Sponsor Group #0
+Brian and Shannon
+Dustin and Kahea
+Sarah and AvgJoe
+Sponsor Group #1
+America and Amy
+Garrett and Arthi
+Sponsor Group #2
+Nathan and Matt
+Erick and Michael
+Sponsor Group #3
+Mauricio and Lingge
+Jessie and Siyao
